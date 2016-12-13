@@ -9,6 +9,33 @@ import  TotalChart  from '../components/TotalChart';
 import { Container, Row, Col } from 'reactstrap';
 
 import AggregationSelector from './AggregationSelector';
+import OrderingSelector from './OrderingSelector';
+import { AutoSizer, List, WindowScroller } from 'react-virtualized';
+
+
+const getRowRenderer = (list, dataKey) => {
+
+  return function rowRenderer ({
+    key,         // Unique key within array of rows
+    index,       // Index of row within collection
+    isScrolling, // The List is currently being scrolled
+    isVisible,   // This row is visible within the List (eg it is not an overscanned row)
+    style        // Style object to be applied to row (to position it)
+  }) {
+    return (
+
+      <div
+        key={key}
+        style={style}
+      >
+        <TotalChart className="histogram-chart" data={[list[index]]}
+          dataKey={dataKey}/>
+      </div>
+    )
+  }
+
+}
+
 
 
 class Home extends React.Component {
@@ -34,13 +61,27 @@ class Home extends React.Component {
     <AggregationSelector/>
 
 
-
-
-    <h2>Risultati per provincia</h2>
+    <h2>Risultati</h2>
+    <OrderingSelector/>
+    {/*
     <div style={style}>
       <TotalChart className="histogram-chart" data={dataProvincia} dataKey='DESCPROVINCIA'/>
     </div>
-    { /*dataProvincia.map(
+    */}
+    <AutoSizer>
+    {({ height, width }) => (
+    <List
+   width={width}
+   height={1000}
+   rowCount={data.length}
+   rowHeight={100}
+   overscanRowCount={10}
+   rowRenderer={getRowRenderer(data, 'DESCCOMUNE')}
+   />
+    )}
+  </AutoSizer>
+
+    {/* dataProvincia.map(
         (item,idx) =>
         (<div key={idx} style={style}>
           <TotalChart className="histogram-chart" data={[item]} dataKey='DESCPROVINCIA'/>
@@ -48,10 +89,12 @@ class Home extends React.Component {
       )
     */}
 
+    {/*
     <h2>Risultati per regione</h2>
     <div style={style}>
       <TotalChart className="histogram-chart" data={dataRegione} dataKey='DESCREGIONE'/>
     </div>
+    */}
 
     </Container>
     )

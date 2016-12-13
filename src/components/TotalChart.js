@@ -12,12 +12,13 @@ export default class TotalChart extends React.Component {
 
   render() {
     const { data, dataKey } = this.props;
+    const animationActive = this.props.animationActive !== undefined ?
+      this.props.animationActive : false;
     return (
     <div>
     <Row>
 
       <Col sm="6">
-      <h4>Ripartizioni percentuali</h4>
       <BarChart layout='vertical'
             width={600} height={data.length*90+50} data={data}
             barSize={20}
@@ -26,10 +27,10 @@ export default class TotalChart extends React.Component {
        <YAxis type="category" dataKey={dataKey} />
        <XAxis type="number" domain={[0, 100]}/>
        <Tooltip/>
-       <Legend />
-       <Bar dataKey="percVotanti" fill="RoyalBlue" barSize={4} label/>
-       <Bar dataKey="percSi" fill="teal" label/>
-       <Bar dataKey="percNo" fill="crimson" label />
+       {/**<Legend />*/}
+       <Bar isAnimationActive={animationActive} dataKey="percVotanti" fill="RoyalBlue" barSize={4} label/>
+       <Bar isAnimationActive={animationActive} dataKey="percSi" fill="teal" label/>
+       <Bar isAnimationActive={animationActive} dataKey="percNo" fill="crimson" label />
 
 
        <CartesianGrid strokeDasharray="3 3"/>
@@ -37,7 +38,6 @@ export default class TotalChart extends React.Component {
       </Col>
 
       <Col sm="6">
-      <h4>Numero di voti</h4>
       <BarChart layout='vertical'
             width={600} height={data.length*90+50} data={data}
             barSize={20}
@@ -46,10 +46,10 @@ export default class TotalChart extends React.Component {
        <YAxis type="category" dataKey={dataKey} tick={false}/>
        <XAxis type="number" domain={[0, 'auto']}/>
        <Tooltip/>
-       <Legend />
-       <Bar dataKey="VOTANTI" fill="RoyalBlue" barSize={4} label/>
-       <Bar dataKey="NUMVOTISI" fill="teal" label/>
-       <Bar dataKey="NUMVOTINO" fill="crimson" label />
+       {/**<Legend />*/}
+       <Bar isAnimationActive={animationActive}  dataKey="VOTANTI" fill="RoyalBlue" barSize={4} label/>
+       <Bar isAnimationActive={animationActive}  dataKey="NUMVOTISI" fill="teal" label/>
+       <Bar isAnimationActive={animationActive}  dataKey="NUMVOTINO" fill="crimson" label />
 
        <CartesianGrid strokeDasharray="3 3"/>
       </BarChart>
