@@ -1,34 +1,32 @@
 import React, { Component } from 'react';
 import logo from './logo.svg';
 import './App.css';
-
-import { createStore, compose } from 'redux';
+import { Router, IndexRoute, Route, browserHistory } from 'react-router';
+import { syncHistoryWithStore, routerMiddleware } from 'react-router-redux';
+import { createStore, compose, applyMiddleware } from 'redux';
 import rootReducer from './reducers';
 import { Provider } from 'react-redux';
-import Home from './containers/Home';
+import {BarsPage} from './components/BarsPage';
+import {TreeMapPage} from './components/TreeMapPage';
+import {DataContainer} from './containers/DataContainer';
 
 const store = createStore(rootReducer, undefined, compose(
-  //applyMiddleware(routerMiddleware(browserHistory)),
+  applyMiddleware(routerMiddleware(browserHistory)),
   window.devToolsExtension ? window.devToolsExtension() : f => f,
 ));
 
-import { Container, Jumbotron, Row, Col } from 'reactstrap';
 
+const history = syncHistoryWithStore(browserHistory, store);
 class App extends Component {
-
-
   render() {
     return (
       <Provider store={store}>
-      <div >
-      <Jumbotron>
-         <h1 className="display-3">Referendum 2016</h1>
-      </Jumbotron>
-
-
-        <Home/>
-      </div>
-
+      <DataContainer>
+      <Router history={history}>
+        <Route path={'/'} component={TreeMapPage} />
+        <Route path={'/bars'} component={BarsPage} />
+      </Router>
+      </DataContainer>
       </Provider>
     );
   }

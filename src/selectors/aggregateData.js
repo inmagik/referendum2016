@@ -56,6 +56,27 @@ export const getPercentData = createSelector(
   (data) => calculatePercents(data)
 )
 
+const calculateTree = data => {
+
+  let out = { 'SI' : {}, 'NO' : {} };
+  data.map(item => {
+    out['SI'][item.DESCREGIONE] = out['SI'][item.DESCREGIONE] || 0;
+    out['SI'][item.DESCREGIONE] += parseInt(item.NUMVOTISI);
+    out['NO'][item.DESCREGIONE] = out['NO'][item.DESCREGIONE] || 0;
+    out['NO'][item.DESCREGIONE] += parseInt(item.NUMVOTINO);
+  })
+
+  return [
+    { name : 'SI', children:Object.keys(out['SI']).map(k=>({name:k, value:out['SI'][k]}))},
+    { name : 'NO', children:Object.keys(out['NO']).map(k=>({name:k, value:out['NO'][k]}))},
+  ]
+}
+
+export const getTreeData = createSelector(
+  [ getData ],
+  (data) => calculateTree(data)
+)
+
 
 
 export const getAggregateDataProvincia = createSelector(

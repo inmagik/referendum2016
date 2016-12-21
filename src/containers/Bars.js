@@ -39,17 +39,37 @@ const getRowRenderer = (list, dataKey) => {
 
 
 class Home extends React.Component {
+  constructor(props){
+    super(props)
+  }
 
-  componentWillMount(){
-    let data = require('../data/referendum.json')
-    this.props.setDataset(data);
+
+  componentWillReceiveProps(nextProps, ownProps){
+    if(nextProps.aggregation != ownProps.aggregation){
+      console.log(1, this.sizer)
+    }
   }
 
   render() {
-    const { data, dataProvincia, dataRegione, dataTotal } = this.props;
-    console.info(dataProvincia, dataRegione)
+    const { data, dataProvincia, dataRegione, dataTotal, aggregation} = this.props;
 
     let style  = { padding : '4px' }
+    let renderedData, labelField;
+
+    switch (aggregation) {
+      case 'REGIONE':
+        renderedData = dataRegione;
+        labelField = 'DESCREGIONE'
+        break;
+      case 'PROVINCIA':
+        renderedData = dataProvincia;
+        labelField = 'DESCPROVINCIA';
+        break;
+      default:
+        renderedData = data;
+        labelField = 'DESCCOMUNE'
+    }
+
 
     return (
     <Container>
@@ -61,22 +81,23 @@ class Home extends React.Component {
     <AggregationSelector/>
 
 
-    <h2>Risultati</h2>
+    <h2>Risultati per {aggregation}</h2>
     <OrderingSelector/>
     {/*
     <div style={style}>
       <TotalChart className="histogram-chart" data={dataProvincia} dataKey='DESCPROVINCIA'/>
     </div>
     */}
-    <AutoSizer>
+    <AutoSizer ref={(sizer) => {this.sizer = sizer}}>
     {({ height, width }) => (
     <List
+    ref={(list) => {this.list = list}}
    width={width}
    height={1000}
    rowCount={data.length}
    rowHeight={100}
    overscanRowCount={10}
-   rowRenderer={getRowRenderer(data, 'DESCCOMUNE')}
+   rowRenderer={getRowRenderer(renderedData, labelField)}
    />
     )}
   </AutoSizer>
@@ -108,7 +129,8 @@ const mapStateToProps = (state, props) => {
     data : getPercentData(state),
     dataProvincia : getFinalDataProvincia(state),
     dataRegione : getFinalDataRegione(state),
-    dataTotal : getFinalDataTotal(state)
+    dataTotal : getFinalDataTotal(state),
+    aggregation : state.aggregation,
   }
 }
 

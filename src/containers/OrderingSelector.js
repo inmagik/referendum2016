@@ -2,7 +2,7 @@ import React, {PropTypes} from 'react';
 import { Container, Row, Col } from 'reactstrap';
 import { Button, Form, FormGroup, Label, Input, FormText } from 'reactstrap';
 
-export default class OrderingSelector extends React.Component {
+export default class AggregationSelector extends React.Component {
   constructor(props) {
     super(props);
   }
